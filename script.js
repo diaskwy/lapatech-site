@@ -104,3 +104,24 @@ function copiarPix(){
 }
 // Inicializa produtos ao carregar
 window.onload = carregarProdutosIndex;
+
+function abrirWhatsApp(){
+  const numero = "5575983313523"; // número do WhatsApp
+  const hora = new Date().getHours();
+  let saudacao = "Olá";
+
+  if(hora >= 5 && hora < 12){
+    saudacao = "Bom dia";
+  } else if(hora >= 12 && hora < 18){
+    saudacao = "Boa tarde";
+  } else {
+    saudacao = "Boa noite";
+  }
+
+  const mensagem = `${saudacao}, gostaria de marcar um horário para o serviço. Qual horário está disponível?`;
+  const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+
+  window.open(url, "_blank");
+}
+
+
