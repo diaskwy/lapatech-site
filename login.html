@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Login - LAPATECH Admin</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  body{display:flex;align-items:center;justify-content:center;height:100vh;background:var(--bg)}
+  .login-box{background:var(--card);padding:20px;border-radius:10px;max-width:360px;width:100%;box-shadow:0 14px 40px rgba(0,0,0,0.08)}
+  .login-box input{width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:8px}
+  .login-box button{width:100%}
+</style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Login Admin</h2>
+    <input id="user" placeholder="Usuário (opcional)" />
+    <input id="pass" type="password" placeholder="Senha" />
+    <button onclick="login()">Entrar</button>
+    <p style="font-size:13px;color:var(--muted);margin-top:8px">Use a senha fornecida ao proprietário.</p>
+  </div>
+
+<script>
+  function login(){
+    const p = document.getElementById('pass').value.trim();
+    // senha que você informou:
+    if(p === 'maycaodalapa18'){
+      localStorage.setItem('lapatech_admin_logged','1');
+      // redireciona para painel
+      window.location.href = 'admin.html';
+    } else {
+      alert('Senha incorreta.');
+    }
+  }
+</script>
+</body>
+</html>

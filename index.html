@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LAPATECH Informática</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo-box">
+      <div class="logo-provisoria">LAPATECH</div>
+    </div>
+    <div class="site-title">
+      <h1>LAPATECH Informática</h1>
+      <p>Empresa de vendas e assistência técnica de celular e notebook. Compras e varejo, produtos/serviços.</p>
+    </div>
+    <a class="btn primary" href="https://wa.me/5575983313523" target="_blank" rel="noopener">Fale no WhatsApp</a>
+  </header>
+
+  <nav class="site-nav">
+    <a href="#produtos">Produtos</a>
+    <a href="#servicos">Serviços</a>
+    <a href="#carrinho">Carrinho</a>
+    <a href="#contato">Contato</a>
+    <a href="login.html">Painel Admin</a>
+  </nav>
+
+  <main>
+    <section id="produtos" class="section">
+      <h2>Produtos</h2>
+      <div id="produtos-list" class="grid">
+        <!-- Produtos carregados via script (localStorage ou pré-definidos) -->
+      </div>
+    </section>
+
+    <section id="servicos" class="section">
+      <h2>Serviços (Somente com hora marcada)</h2>
+      <div id="servicos-list" class="grid">
+        <!-- Serviços carregados via script -->
+      </div>
+    </section>
+
+    <section id="carrinho" class="section">
+      <h2>Carrinho</h2>
+      <div id="cart-area" class="card">
+        <p id="empty-cart">Seu carrinho está vazio.</p>
+        <div id="cart-items"></div>
+        <div id="cart-footer" style="display:none;">
+          <p>Total: <strong id="cart-total">R$ 0,00</strong></p>
+          <div class="checkout-actions">
+            <button class="btn" onclick="checkoutPix()">Pagar com Pix</button>
+            <button class="btn" onclick="checkoutPayPal()">Pagar com PayPal</button>
+            <a class="btn outline" id="checkout-whatsapp" href="#" target="_blank">Finalizar via WhatsApp</a>
+          </div>
+        </div>
+        <div id="pix-dinamico" style="display:none; margin-top:10px; padding:10px; background:#eee; border-radius:5px; border-radius:5px;">
+  <p>Chave Pix: <span id="pix-key">08684203526</span> <button onclick="copiarPix()" class="btn small">Copiar</button></p>
+  <img id="pix-qrcode" src="" alt="QR Code Pix" style="margin-top:10px;" />
+</div>
+    </section>
+
+    <section id="contato" class="section">
+      <h2>Contato</h2>
+      <p>📍 Cidade: Amélia Rodrigues, Bahia</p>
+      <p>📱 WhatsApp: <a href="https://wa.me/5575983313523" target="_blank">+55 75 98331-3523</a></p>
+      <p>📧 Email: <a href="mailto:maycaoiphones@gmail.com">maycaoiphones@gmail.com</a></p>
+      <p>📷 Instagram: <a href="https://instagram.com/lapatech_assistencia" target="_blank">@lapatech_assistencia</a></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>&copy; <span id="year"></span> LAPATECH Informática - Todos os direitos reservados</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

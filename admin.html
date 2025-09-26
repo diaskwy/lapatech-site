@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" /><meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Painel Admin - LAPATECH</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  .admin-wrap{max-width:1000px;margin:24px auto;padding:18px}
+  .admin-grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
+  .form-row input, .form-row textarea, .form-row select {width:100%;padding:8px;margin:6px 0;border-radius:8px;border:1px solid #ddd}
+  .items-preview{max-height:520px;overflow:auto}
+  .thumb{width:80px;height:60px;object-fit:cover;border-radius:6px;border:1px solid #ddd}
+  .item-row{display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px dashed #eee}
+</style>
+</head>
+<body>
+  <div class="admin-wrap">
+    <h2>Painel Administrativo</h2>
+    <p>Adicione produtos ou serviços. Apenas usuários com senha conseguem acessar.</p>
+    <div class="admin-grid">
+      <div>
+        <div class="card form-row">
+          <label>Tipo</label>
+          <select id="tipo-field"><option value="produto">Produto</option><option value="servico">Serviço</option></select>
+          <label>Nome</label><input id="nome-field" />
+          <label>Descrição</label><textarea id="desc-field" rows="3"></textarea>
+          <label>Preço (use ponto como separador)</label><input id="preco-field" placeholder="ex: 59.90" />
+          <label>Imagem (upload)</label><input id="img-field" type="file" accept="image/*" />
+          <div style="display:flex;gap:8px">
+            <button onclick="salvarItem()" class="btn primary">Salvar item</button>
+            <button onclick="logout()" class="btn outline">Sair</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card items-preview">
+          <h3>Pré-visualização / Itens cadastrados</h3>
+          <div id="itens-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+// proteção: precisa estar logado
+if(localStorage.getItem('lapatech_admin_logged') !== '1'){
+  alert('Você precisa entrar primeiro.');
+  window.location.href = 'login.html';
+}
+
+// carregar items
+function loadItems(){
+  try{ return JSON.parse(localStorage.getItem('lapatech_items')) || []; } catch(e){ return []; }
+}
+function saveItems(arr){ localStorage.setItem('lapatech_items', JSON.stringify(arr)); }
+
+// render preview na coluna direita
+function renderItems(){
+  const arr = loadItems();
+  const wrap = document.getElementById('itens-list');
+  wrap.innerHTML = '';
+  arr.forEach((it, i) => {
+    const div = document.createElement('div'); div.className = 'item-row';
+    div.innerHTML = `
+      <img src="${it.imgDataUrl || ''}" class="thumb" onerror="this.style.display='none'">
+      <div style="flex:1">
+        <strong>${it.nome}</strong>
+        <div style="color:var(--muted);font-size:13px">${it.tipo} ${it.preco? '— R$ ' + it.preco : ''}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <button class="btn small" onclick="editItem(${i})">Editar</button>
+        <button class="btn small" onclick="deleteItem(${i})">Excluir</button>
+      </div>
+    `;
+    wrap.appendChild(div);
+  });
+}
+
+// salvar novo item (com upload)
+function salvarItem(){
+  const tipo = document.getElementById('tipo-field').value;
+  const nome = document.getElementById('nome-field').value.trim();
+  const desc = document.getElementById('desc-field').value.trim();
+  const preco = document.getElementById('preco-field').value.trim();
+  const fileInput = document.getElementById('img-field');
+
+  if(!nome || !desc){ alert('Preencha nome e descrição'); return; }
+
+  // se tiver imagem, converte para dataURL
+  if(fileInput.files && fileInput.files[0]){
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const imgDataUrl = e.target.result;
+      pushItem({tipo,nome,descricao:desc,preco:preco || '', imgDataUrl});
+    };
+    reader.readAsDataURL(file);
+  } else {
+    pushItem({tipo,nome,descricao:desc,preco:preco || '', imgDataUrl: ''});
+  }
+}
+
+function pushItem(item){
+  const arr = loadItems();
+  arr.unshift(item); // adiciona no topo
+  saveItems(arr);
+  // notifica outras abas/página
+  localStorage.setItem('lapatech_items', JSON.stringify(arr));
+  renderItems();
+  // limpa campos
+  document.getElementById('nome-field').value='';
+  document.getElementById('desc-field').value='';
+  document.getElementById('preco-field').value='';
+  document.getElementById('img-field').value='';
+  alert('Item salvo! Abra a página inicial para ver o item (ou atualize).');
+}
+
+function editItem(index){
+  const arr = loadItems();
+  const it = arr[index];
+  if(!it) return;
+  // preenche form com valores
+  document.getElementById('tipo-field').value = it.tipo;
+  document.getElementById('nome-field').value = it.nome;
+  document.getElementById('desc-field').value = it.descricao;
+  document.getElementById('preco-field').value = it.preco;
+  // remove item que será editado (ao salvar será re-inserido no topo)
+  arr.splice(index,1);
+  saveItems(arr);
+  renderItems();
+}
+
+function deleteItem(index){
+  if(!confirm('Excluir este item?')) return;
+  const arr = loadItems();
+  arr.splice(index,1);
+  saveItems(arr);
+  renderItems();
+}
+
+function logout(){
+  localStorage.removeItem('lapatech_admin_logged');
+  window.location.href = 'login.html';
+}
+
+// inicializa
+renderItems();
+</script>
+</body>
+</html>
